@@ -13,9 +13,6 @@ router.get('/', function(req, res, next) {
       return console.error(err);
     }
   });
-  
-  // res.render('home');
-  // res.send("oui")
 });
 
 module.exports = router;

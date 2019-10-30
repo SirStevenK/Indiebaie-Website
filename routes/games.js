@@ -4,7 +4,7 @@ var router = express.Router();
 
 var Game = require('../models/game_model')
 
-pad = (n) => n < 10 ? "0" + n : n;
+pad = (n) => n < 10 ? "0" + n : n; // format number XX
 
 router.get('/', function(req, res, next) {
   res.redirect('/');
@@ -12,12 +12,11 @@ router.get('/', function(req, res, next) {
 
 /* GET home page. */
 router.get('/[a-zA-Z0-9-]+\/?/', function(req, res, next) {
-  
-
   var gamename = req.url.replace(/\//gi, "").replace(/-/gi, " ");
   Game.findOne({ nom: gamename }, (err, game) => {
     if (!err && game !== null) {
       if (game.urlKongregate !== null) {
+        // Obtenir api Kongregate du jeu
         http.get(game.urlKongregate.replace("https", "http") + '/metrics.json', (response) => {
           let data = '';
           response.on('data', (chunk) => {
@@ -31,16 +30,6 @@ router.get('/[a-zA-Z0-9-]+\/?/', function(req, res, next) {
         }).on("error", (error) => {
           res.render('game', {game: game, sortie: null, nb_gameplay: null, rating: null});
         });
-        // axios.get("http://www.kongregate.com/games/indiebaie/monster-tycoon/metrics.json").then(res => {
-        //   console.log("non");  
-        //   console.log(res);
-        //   console.log(JSON.parse(res).gameplays_count);
-        //   console.log(JSON.parse(res).rating);
-        //   console.log("oui");
-        //   res.render('game', {game: game, nb_gameplay: res.gameplays_count, rating: res.rating});
-        // }).catch(err => {
-        //   res.render('game', {game: game, nb_gameplay: null, rating: null});
-        // })
       }
       else res.render('game', {game: game, sortie: null, nb_gameplay: null, rating: null});
     }
