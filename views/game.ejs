@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="theme-color" content="#3d3d3d">
+        <title>Site Indiebaie</title>
+        <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link href="https://fonts.googleapis.com/css?family=Leckerli+One|Roboto+Condensed|Lato&display=swap" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" media="screen" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/components/icon.min.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="/stylesheets/styles.css">
+        <link rel="stylesheet" type="text/css" media="screen" href="/stylesheets/slideshow.css">
+        <script>var imagesSlideshow = "<%= game.images %>".split(",")</script>
+    </head>
+    <body>
+        <header>
+            <img src="<%= game.topImage %>">
+        </header>
+        <section id="fil" class="game">
+            <% if (game.urlJeu !== null) { %>
+                <div id="thegame" class="fil-group">
+                    <h2 class="fil-group-title">Le jeu</h2>
+                    <iframe id="game"
+                        title="Game"
+                        width="806"
+                        height="606"
+                        src="<%= game.urlJeu %>">
+                    </iframe>
+                </div>
+            <% } %>
+            <div id="screengame" class="fil-group">
+                <h2 class="fil-group-title">Images du jeu</h2>
+                <div class="slideshow">
+                    <img style="border: 5px solid black; border-radius: 10px; " src="<%= game.images[0] %>">
+                    <div class="left" onclick="switchImageSlideshow(this, 'left')">
+                        <i class="angle left icon"></i>
+                    </div>
+                    <div class="right" onclick="switchImageSlideshow(this, 'right')">
+                            <i class="angle right icon"></i>
+                    </div>
+                    <div class="bottom">
+                        <i class="circle icon" onclick="setImageSlideshow(this, 0)"></i>
+                        <% for ( let i = 1; i < game.images.length; i++) { %>
+                            <i class="circle outline icon" onclick="setImageSlideshow(this, <%= i %>)"></i>
+                        <% } %>
+                    </div>
+                    <script src="/javascripts/slideshow.js"></script>
+                </div>
+            </div>
+            <% if (game.sortie !== null) { %> 
+                <div id="infogame" class="fil-group">
+                    <h2 class="fil-group-title">Informations</h2>
+                    <p class="info-supp">Sortie le <%= sortie %><span class="info-separator"></span>Joué <%= nb_gameplay %> fois sur <a href="<%= game.urlKongregate %>">Kongregate</a><span class="info-separator"></span>Noté <%= rating %>/5.0</p>
+                </div>
+            <% } %>
+            <footer>
+                <p>Site de IndieBaie - <a class="link" href="https://www.kongregate.com/accounts/IndieBaie">Kongregate</a> - Handmade ❤️</p>
+                <p><a class="link" href="/">Retour à l'accueil</a></p>
+            </footer>
+        </section>
+    </body>
+</html>

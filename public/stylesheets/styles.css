@@ -1,0 +1,184 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    min-height: 100%;
+    background-color: #4b4b4b;
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* header h1 {
+    font-size: 12em;
+    font-family: Leckerli One;
+    text-align: center;
+} */
+
+header img {
+    display: block;
+    margin: 0 auto;
+    width: 100%;
+    max-width: 1024px;
+}
+
+#fil {
+    flex: auto;
+    padding: 20px 0;
+    max-width: 1200px;
+    background-color: #3d3d3d;
+    margin: 0 auto;
+    border-radius: 20px;
+    margin-bottom: 15px;
+}
+
+.fil-group {
+    display: flex;
+    flex-direction: column;
+}
+
+#fil .fil-group-title {
+    color: whitesmoke;
+    text-align: center;
+    font-family: Lato;
+    font-size: 3.5em;
+    margin-bottom: 15px;
+}
+
+#fil .fil-card {
+    display: grid;
+    align-items: center;
+    grid-template-areas: "image"
+                    "title" 
+                    ".";
+    grid-template-rows: auto;
+    grid-template-columns: 1fr;
+    border-top: 1px solid gray;
+    /* border-bottom: 1px solid whitesmoke; */
+}
+
+#fil .fil-card img {
+    grid-area: image;
+    z-index: 0;
+    grid-row: 1/4;
+    display: block;
+    opacity: 0.8;
+    width: 100%;
+}
+
+#fil .fil-card:hover img {
+    opacity: 0.5;
+}
+
+#fil .fil-card:hover .fil-card-title {
+    display: block;
+}
+
+#fil .fil-card-title {
+    z-index: 1;
+    grid-row: 2;
+    grid-area: title;
+    color: whitesmoke;
+    text-align: center;
+    font-family: Roboto Condensed;
+    font-size: 48px;
+    display: none;
+}
+#fil .fil-card-text {
+    color: whitesmoke;
+    text-align: center;
+    font-family: Lato;
+    font-size: 12px;
+}
+
+#fil.game .fil-group {
+    margin-bottom: 30px;
+}
+
+#fil.game .fil-card-title {
+    margin-bottom: 15px;
+}
+
+#game {
+    border: none;
+    display: block;
+    margin: 0 auto;
+    border: 3px solid black;
+    border-radius: 10px;
+}
+
+
+footer .link {
+    text-decoration-color: white;
+    text-decoration: underline;
+}
+
+footer p {
+    margin-top: 15px;
+    color: white;
+    font-family: Roboto Condensed;
+    font-size: 16px;
+    text-align: center;
+
+}
+
+.ib-blue {
+    color: #32ff7e;
+}
+
+.ib-green {
+    color: #18dcff;
+}
+
+
+#infogame .info-supp .info-separator::before {
+    content: ' - ';
+}
+
+@media only screen and (max-width: 1023px) {
+    #thegame {
+        display: none;
+    }
+    
+    #infogame .info-supp {
+        font-size: 20px;
+    }
+
+    #infogame .info-supp .info-separator::before {
+        display: block;
+        content: ' ';
+    }
+}
+@media only screen and (min-width: 768px) and (max-width: 1023px) {
+    #fil .fil-group-title {
+        font-size: 3em;
+    }
+    
+}
+@media only screen and (max-width: 767px) {
+    #fil .fil-group-title {
+        font-size: 2em;
+    }
+
+    #fil {
+        border-radius: 0;
+        height: 100%;
+        margin-bottom: 0;        
+    }
+
+    #fil .fil-card-title {
+        font-size: 36px;
+    }
+}

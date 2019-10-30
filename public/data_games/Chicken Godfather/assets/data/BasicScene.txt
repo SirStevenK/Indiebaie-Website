@@ -1,0 +1,592 @@
+package;
+
+import flixel.FlxState;
+import flixel.FlxSprite;
+import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
+import flixel.ui.FlxBar;
+import flixel.util.FlxColor;
+import flixel.text.FlxText;
+import flixel.input.mouse.FlxMouseEventManager;
+import flixel.FlxG;
+import flixel.text.FlxText.FlxTextFormatMarkerPair;
+
+class MissionState extends FlxState
+{
+	var _player:Player;
+	var lang:String;
+	var fieldUpgradeInfo:FlxTypedSpriteGroup<FlxSprite>;
+	var fieldMission:FlxTypedSpriteGroup<FlxSprite>;
+	var fieldUpgradeRank:FlxTypedSpriteGroup<FlxSprite>;
+	var fieldMenu:FlxTypedSpriteGroup<FlxSprite>;
+	var fieldFooter:FlxTypedSpriteGroup<FlxSprite>;
+	
+	var wrong:FlxTextFormatMarkerPair;
+	var normal:FlxTextFormatMarkerPair;
+	var good:FlxTextFormatMarkerPair;
+	
+	public function new(player:Player)
+	{
+		_player = player;
+		lang = _player.getLang();
+		
+		super();
+	}
+	
+	override public function create():Void
+	{
+		var wrongFormat:FlxTextFormat = new FlxTextFormat(FlxColor.fromRGB(232, 65, 24));
+		wrong = new FlxTextFormatMarkerPair(wrongFormat, "#");
+		
+		var normalFormat:FlxTextFormat = new FlxTextFormat(FlxColor.WHITE);
+		normal = new FlxTextFormatMarkerPair(normalFormat, "#");
+		
+		var goodFormat:FlxTextFormat = new FlxTextFormat(FlxColor.fromRGB(76, 209, 55));
+		good = new FlxTextFormatMarkerPair(goodFormat, "#");
+		
+		var backgroundGame:FlxSprite = new FlxSprite(0, 0);
+		backgroundGame.makeGraphic(800, 600, FlxColor.fromRGB(52, 73, 94));
+		add(backgroundGame);
+		
+		var backgroundInfo:FlxSprite = new FlxSprite(0, 0);
+		backgroundInfo.makeGraphic(180, 180, FlxColor.fromRGB(44, 62, 80));
+		add(backgroundInfo);
+		
+		var foregroundInfo:FlxSprite = new FlxSprite(5, 5);
+		foregroundInfo.makeGraphic(170, 170, FlxColor.fromRGB(52, 73, 94));
+		add(foregroundInfo);
+		
+		var backgroundUpgrade:FlxSprite = new FlxSprite(570, 0);
+		backgroundUpgrade.makeGraphic(230, 180, FlxColor.fromRGB(44, 62, 80));
+		add(backgroundUpgrade);
+		
+		var foregroundUpgrade:FlxSprite = new FlxSprite(575, 5);
+		foregroundUpgrade.makeGraphic(220, 170, FlxColor.fromRGB(52, 73, 94));
+		add(foregroundUpgrade);
+		
+		var backgroundCurrent:FlxSprite = new FlxSprite(180, 0);
+		backgroundCurrent.makeGraphic(390, 180, FlxColor.fromRGB(44, 62, 80));
+		add(backgroundCurrent);
+		
+		var foregroundCurrent:FlxSprite = new FlxSprite(185, 5);
+		foregroundCurrent.makeGraphic(380, 170, FlxColor.fromRGB(52, 73, 94));
+		add(foregroundCurrent);
+		
+		var backgroundMenu:FlxSprite = new FlxSprite(0, 180);
+		backgroundMenu.makeGraphic(180, 385, FlxColor.fromRGB(44, 62, 80));
+		add(backgroundMenu);
+		
+		var foregroundMenu:FlxSprite = new FlxSprite(5, 185);
+		foregroundMenu.makeGraphic(170, 375, FlxColor.fromRGB(52, 73, 94));
+		add(foregroundMenu);
+		
+		var backgroundContent:FlxSprite = new FlxSprite(180, 180);
+		backgroundContent.makeGraphic(620, 385, FlxColor.fromRGB(44, 62, 80));
+		add(backgroundContent);
+		
+		var foregroundContent:FlxSprite = new FlxSprite(185, 185);
+		foregroundContent.makeGraphic(610, 375, FlxColor.fromRGB(52, 73, 94));
+		add(foregroundContent);
+		
+		fieldUpgradeInfo = new FlxTypedSpriteGroup(5, 5);
+		drawFieldInfo();
+		add(fieldUpgradeInfo);
+		
+		fieldMission = new FlxTypedSpriteGroup(180, 5);
+		drawFieldMission();
+		add(fieldMission);
+		
+		fieldUpgradeRank = new FlxTypedSpriteGroup(575, 5);
+		drawFieldGrade();
+		add(fieldUpgradeRank);
+		
+		fieldMenu = new FlxTypedSpriteGroup(5, 185);
+		drawFieldMenu();
+		add(fieldMenu);
+		
+		fieldFooter = new FlxTypedSpriteGroup(0, 565);
+		drawFieldFooter();
+		add(fieldFooter);
+		
+		super.create();
+	}
+	
+	public function drawFieldInfo():Void
+	{
+		fieldUpgradeInfo.clear();
+		
+		var bonheur = _player.getBonheur();
+		var money = _player.getMoney();
+		var tenders = _player.getTenders();
+		var sauces = _player.getSauces();
+		
+		var happySprite:FlxSprite = new FlxSprite(0, 8, AssetPaths.icon_smile__png);
+		happySprite.scale.set(1.75, 1.75);
+		happySprite.updateHitbox();
+		fieldUpgradeInfo.add(happySprite);
+		
+		var uiText:FlxText = new FlxText(0, 10, 0, 'Bonheur   $bonheur');
+		if (lang == "EN") uiText.text = 'Happiness  $bonheur';
+		uiText.setFormat(AssetPaths.TitanOne_Regular__ttf, 18, FlxColor.WHITE, CENTER);
+		fieldUpgradeInfo.add(uiText);
+		
+		var happySize:Float = uiText.width + happySprite.width;
+		
+		uiText.x += ((170 - happySize) / 2);
+		happySprite.x = uiText.x + uiText.width;
+		
+		var btnUpgrade:FlxSprite = new FlxSprite(5, 40);
+		btnUpgrade.loadGraphic(AssetPaths.btnTop__png, true, 160, 40);
+		//if (tenders >= bonheur + 1 || (bonheur < 10 && tenders >= Math.round((bonheur + 1) / 2))) btnUpgrade.animation.frameIndex = 2;
+		//else btnUpgrade.animation.frameIndex = 0;
+		fieldUpgradeInfo.add(btnUpgrade);
+		FlxMouseEventManager.add(btnUpgrade, upgradeHappy, null, hoverBtnTop, outBtnTop);
+		
+		var uiText:FlxText = new FlxText(5, 48, 160, 'Manger ${bonheur + 1} Tenders');
+		if (lang == "EN") uiText.text = 'Eat ${bonheur + 1} Tenders';
+		
+		// REPRENDRE UP DOWN
+		if (bonheur < 10)
+		{
+			uiText = new FlxText(5, 48, 160, 'Manger ${Math.round((bonheur + 1) / 2)} Tenders');
+			if (lang == "EN") uiText.text = 'Eat ${Math.round((bonheur + 1) / 2)} Tenders';
+		}
+		uiText.setFormat(AssetPaths.Roboto_Bold__ttf, 16, FlxColor.WHITE, CENTER);
+		fieldUpgradeInfo.add(uiText);
+		
+		var moneySprite:FlxSprite = new FlxSprite(130, 90, AssetPaths.dolar__png);
+		fieldUpgradeInfo.add(moneySprite);
+		
+		var moneyText = new FlxText(0, 87, 126, '$money');
+		moneyText.setFormat(AssetPaths.Roboto_Bold__ttf, 16, FlxColor.WHITE, RIGHT);
+		fieldUpgradeInfo.add(moneyText);
+		
+		var tenderSprite:FlxSprite = new FlxSprite(132, 118, AssetPaths.chickentenders__png);
+		fieldUpgradeInfo.add(tenderSprite);
+		
+		var tendersText = new FlxText(0, 115, 126, '$tenders');
+		tendersText.setFormat(AssetPaths.Roboto_Bold__ttf, 16, FlxColor.WHITE, RIGHT);
+		fieldUpgradeInfo.add(tendersText);
+		
+		var sauceSprite:FlxSprite = new FlxSprite(137, 146, AssetPaths.sauce__png);
+		fieldUpgradeInfo.add(sauceSprite);
+		
+		var saucesText = new FlxText(0, 142, 126, '$sauces');
+		saucesText.setFormat(AssetPaths.Roboto_Bold__ttf, 16, FlxColor.WHITE, RIGHT);
+		fieldUpgradeInfo.add(saucesText);
+	}
+	
+	public function drawFieldMission():Void
+	{
+		fieldMission.clear();
+		
+		var uiText:FlxText = new FlxText(0, 10, 380, 'Mission');
+		uiText.setFormat(AssetPaths.TitanOne_Regular__ttf, 22, FlxColor.WHITE, CENTER);
+		fieldMission.add(uiText);
+		
+		if (_player.missionEnCours())
+		{
+			var typeMission = _player.getMissionType();
+			var compMission = _player.getMissionComp();
+			
+			if (typeMission.indexOf("Mission") != -1)
+			{
+				var uiText:FlxText = new FlxText(5, 40, 380);
+				if (lang == "FR")
+				{
+					if (typeMission == "Mission0")      uiText.text = 'Livrer ${compMission[0]} tenders';
+					else if (typeMission == "Mission1") uiText.text = 'Récupérer ${compMission[0]} tenders';
+					else if (typeMission == "Mission2") uiText.text = 'Livrer ${compMission[0]} tenders et ${compMission[1]} sauces';
+					else if (typeMission == "Mission3") uiText.text = 'Récupérer ${compMission[0]} tenders et ${compMission[1]} sauces';
+					else if (typeMission == "Mission4") uiText.text = 'Assister un membre';
+					else if (typeMission == "Mission5") uiText.text = 'Surveiller un stock de poulet';
+				}
+				else if (lang == "EN")
+				{
+					if (typeMission == "Mission0")      uiText.text = 'To Deliver ${compMission[0]} tenders';
+					else if (typeMission == "Mission1") uiText.text = 'To get back ${compMission[0]} tenders';
+					else if (typeMission == "Mission2") uiText.text = 'To Deliver ${compMission[0]} tenders and ${compMission[1]} sauces';
+					else if (typeMission == "Mission3") uiText.text = 'To get back ${compMission[0]} tenders and ${compMission[1]} sauces';
+					else if (typeMission == "Mission4") uiText.text = 'To Help a member';
+					else if (typeMission == "Mission5") uiText.text = 'To Supervise a stock of tenders';
+				}
+				uiText.setFormat(AssetPaths.Roboto_Bold__ttf, 20, FlxColor.WHITE, CENTER);
+				fieldMission.add(uiText);
+				
+				var barMission:FlxBar = new FlxBar(10, 77, LEFT_TO_RIGHT, 360, 30);
+				barMission.createFilledBar(FlxColor.GRAY, FlxColor.fromRGB(46, 204, 113), true, FlxColor.BLACK);
+				barMission.percent = _player.missionTime() / _player.missionTimeMax() * 100;
+				fieldMission.add(barMission);
+				
+				var mainMissionPercent = new FlxText(10, 78, 360);
+				mainMissionPercent.setFormat(AssetPaths.Roboto_Bold__ttf, 20, FlxColor.BLACK, CENTER);
+				fieldMission.add(mainMissionPercent);
+				
+				var uiText:FlxText = new FlxText(0, 117, 380, "Récompense");
+				if (lang == "EN") uiText.text = 'Reward';
+				uiText.setFormat(AssetPaths.Roboto_Bold__ttf, 18, FlxColor.WHITE, CENTER);
+				fieldMission.add(uiText);
+			}
+			//else if (typeMission.indexOf("Contrat") != -1)
+			//{
+				//var uiText:FlxText = new FlxText(5, 40, 380);
+				//if (lang == "FR")
+				//{
+					//if (contrat[0] == 10) uiText.text = 'Achat : ${contrat[1]} tenders';
+					//else if (contrat[0] == 11) uiText.text = 'Achat : ${contrat[1]} tenders et ${contrat[2]} sauces';
+					//else if (contrat[0] == 12) uiText.text = 'Vente : ${contrat[1]} tenders';
+					//else if (contrat[0] == 13) uiText.text = 'Vente : ${contrat[1]} tenders et ${contrat[2]} sauces';
+				//}
+				//else if (lang == "EN")
+				//{
+					//if (contrat[0] == 10) uiText.text = 'Purchase : ${contrat[1]} tenders';
+					//else if (contrat[0] == 11) uiText.text = 'Purchase : ${contrat[1]} tenders and ${contrat[2]} sauces';
+					//else if (contrat[0] == 12) uiText.text = 'Sale : ${contrat[1]} tenders';
+					//else if (contrat[0] == 13) uiText.text = 'Sale : ${contrat[1]} tenders and ${contrat[2]} sauces';
+				//}
+				//uiText.setFormat(AssetPaths.Roboto_Bold__ttf, 20, FlxColor.WHITE, CENTER);
+				//fieldMission.add(uiText);
+				//
+				//var barMission:FlxBar = new FlxBar(10, 77, LEFT_TO_RIGHT, 360, 30);
+				//barMission.createFilledBar(FlxColor.GRAY, FlxColor.fromRGB(46, 204, 113), true, FlxColor.BLACK);
+				//barMission.percent = listTimeContrat[0] / contrat[4] * 100;
+				//fieldMission.add(barMission);
+				//
+				//mainMissionPercent = new FlxText(10, 78, 360);
+				//mainMissionPercent.setFormat(AssetPaths.Roboto_Bold__ttf, 20, FlxColor.BLACK, CENTER);
+				//fieldMission.add(mainMissionPercent);
+				//
+				//var uiText:FlxText = new FlxText(0, 117, 380, "Récompense");
+				//if (lang == "EN") uiText.text = 'Reward';
+				//uiText.setFormat(AssetPaths.Roboto_Bold__ttf, 18, FlxColor.WHITE, CENTER);
+				//fieldMission.add(uiText);
+			//}
+			else
+			{
+				var uiText:FlxText = new FlxText(5, 40, 380, "Vous n'avez aucune mission en cours");
+				if (lang == "EN") uiText.text = 'You don’t have current mission';
+				uiText.setFormat(AssetPaths.Roboto_Bold__ttf, 22, FlxColor.WHITE, CENTER);
+				fieldMission.add(uiText);
+			}
+		}
+		
+	}
+	
+	public function drawFieldGrade():Void
+	{
+		fieldUpgradeRank.clear();
+		
+		var grade = _player.getGrade();
+		var nextRank = _player.getConditionNextRank();
+		
+		var uiText:FlxText = new FlxText(0, 5, 220, 'Grade : ${grade}');
+		if (lang == "EN") uiText.text = 'Rank : ${grade}';
+		uiText.setFormat(AssetPaths.Roboto_Bold__ttf, 18, FlxColor.WHITE, CENTER);
+		fieldUpgradeRank.add(uiText);
+		
+		var btnUpgrade:FlxSprite = new FlxSprite(35, 40);
+		btnUpgrade.loadGraphic(AssetPaths.btnTop__png, true, 160, 40);
+		if (_player.isGoodUpgrade()) btnUpgrade.animation.frameIndex = 2;
+		else btnUpgrade.animation.frameIndex = 0;
+		fieldUpgradeRank.add(btnUpgrade);
+		FlxMouseEventManager.add(btnUpgrade, upgradeRank, null, hoverBtnTop, outBtnTop);
+		
+		var uiText:FlxText = new FlxText(35, 44, 160, 'Promotion');
+		uiText.setFormat(AssetPaths.TitanOne_Regular__ttf, 23, FlxColor.WHITE, CENTER);
+		fieldUpgradeRank.add(uiText);
+		
+		var moneySprite:FlxSprite = new FlxSprite(130, 90, AssetPaths.dolar__png);
+		fieldUpgradeRank.add(moneySprite);
+		
+		var upgradeMoneyText = new FlxText(0, 87, 0, '#${nextRank[2]}# x');
+		if (_player.isGoodMoney()) upgradeMoneyText .applyMarkup(upgradeMoneyText.text, [normal]);
+		else upgradeMoneyText .applyMarkup(upgradeMoneyText.text, [wrong]);
+		upgradeMoneyText.setFormat(AssetPaths.Roboto_Bold__ttf, 16, FlxColor.WHITE, RIGHT);
+		fieldUpgradeRank.add(upgradeMoneyText);
+		
+		var moneySize:Float = upgradeMoneyText.width + moneySprite.width;
+		
+		upgradeMoneyText.x += ((230 - moneySize) / 2);
+		moneySprite.x = upgradeMoneyText.x + upgradeMoneyText.width + 4;
+		
+		var tenderSprite:FlxSprite = new FlxSprite(132, 118, AssetPaths.chickentenders__png);
+		fieldUpgradeRank.add(tenderSprite);
+		
+		var upgradeTendersText = new FlxText(0, 115, 0, '#${nextRank[1]}# x');
+		if (_player.isGoodTenders()) upgradeTendersText.applyMarkup(upgradeTendersText.text, [normal]);
+		else upgradeTendersText.applyMarkup(upgradeTendersText.text, [wrong]);
+		upgradeTendersText.setFormat(AssetPaths.Roboto_Bold__ttf, 16, FlxColor.WHITE, RIGHT);
+		fieldUpgradeRank.add(upgradeTendersText);
+		
+		var tendersSize:Float = upgradeTendersText.width + tenderSprite.width;
+		
+		upgradeTendersText.x += ((230- tendersSize) / 2);
+		tenderSprite.x = upgradeTendersText.x + upgradeTendersText.width + 4;
+		
+		var happySprite:FlxSprite = new FlxSprite(137, 146, AssetPaths.icon_smile__png);
+		fieldUpgradeRank.add(happySprite);
+		
+		var upgradeHappyText = new FlxText(0, 142, 0, '#${nextRank[0]}# x ');
+		if (_player.isGoodBonheur()) upgradeHappyText.applyMarkup(upgradeHappyText.text, [normal]);
+		else upgradeHappyText.applyMarkup(upgradeHappyText.text, [wrong]);
+		upgradeHappyText.setFormat(AssetPaths.Roboto_Bold__ttf, 16, FlxColor.WHITE, RIGHT);
+		fieldUpgradeRank.add(upgradeHappyText);
+		
+		var happySize:Float = upgradeHappyText.width + happySprite.width;
+		
+		upgradeHappyText.x += ((230 - happySize) / 2);
+		happySprite.x = upgradeHappyText.x + upgradeHappyText.width + 4;
+	}
+	
+	public function drawFieldMenu():Void
+	{
+		fieldMenu.clear();
+		
+		var uiText:FlxText = new FlxText(5, 100, 160, "Mission");
+		uiText.setFormat(AssetPaths.Roboto_Bold__ttf, 16, FlxColor.WHITE, CENTER);
+		//if (menuOption != "Mission") uiText.color = FlxColor.fromRGB(189, 195, 199);
+		fieldMenu.add(uiText);
+		uiText.ID = 1;
+		//FlxMouseEventManager.add(uiText, changeContent, null, null, null, false, true, false);
+		
+		var uiText:FlxText = new FlxText(5, 130, 160, "Contrat");
+		if (lang == "EN") uiText.text = "Contract";
+		uiText.setFormat(AssetPaths.Roboto_Bold__ttf, 16, FlxColor.WHITE, CENTER);
+		//if (menuOption != "Contrat" && rank >= 2) uiText.color = FlxColor.fromRGB(189, 195, 199);
+		//else if (menuOption != "Contrat") uiText.color = FlxColor.fromRGB(53, 59, 72);
+		fieldMenu.add(uiText);
+		uiText.ID = 2;
+		//FlxMouseEventManager.add(uiText, changeContent, null, null, null, false, true, false);
+		
+		var uiText:FlxText = new FlxText(5, 160, 160, "Recrutement");
+		if (lang == "EN") uiText.text = "Recruitment";
+		uiText.setFormat(AssetPaths.Roboto_Bold__ttf, 16, FlxColor.WHITE, CENTER);
+		//if (menuOption != "Recrutement" && rank >= 1) uiText.color = FlxColor.fromRGB(189, 195, 199);
+		//else if (menuOption != "Recrutement") uiText.color = FlxColor.fromRGB(53, 59, 72);
+		fieldMenu.add(uiText);
+		uiText.ID = 3;
+		//FlxMouseEventManager.add(uiText, changeContent, null, null, null, false, true, false);
+		
+		var uiText:FlxText = new FlxText(5, 190, 160, "Fabrique");
+		if (lang == "EN") uiText.text = "Factory";
+		uiText.setFormat(AssetPaths.Roboto_Bold__ttf, 16, FlxColor.WHITE, CENTER);
+		//if (menuOption != "Fabrique" && rank >= 3) uiText.color = FlxColor.fromRGB(189, 195, 199);
+		//else if (menuOption != "Fabrique") uiText.color = FlxColor.fromRGB(53, 59, 72);
+		fieldMenu.add(uiText);
+		uiText.ID = 4;
+		//FlxMouseEventManager.add(uiText, changeContent, null, null, null, false, true, false);
+		
+		var uiText:FlxText = new FlxText(5, 220, 160, "Mode de Vie");
+		if (lang == "EN") uiText.text = "Lifestyle";
+		uiText.setFormat(AssetPaths.Roboto_Bold__ttf, 16, FlxColor.WHITE, CENTER);
+		//if (menuOption != "Mode de Vie" && rank >= 1) uiText.color = FlxColor.fromRGB(189, 195, 199);
+		//else if (menuOption != "Mode de Vie") uiText.color = FlxColor.fromRGB(53, 59, 72);
+		fieldMenu.add(uiText);
+		uiText.ID = 5;
+		//FlxMouseEventManager.add(uiText, changeContent, null, null, null, false, true, false);
+	}
+	
+	public function drawFieldFooter():Void
+	{
+		fieldFooter.clear();
+		
+		var backgroundFooter:FlxSprite = new FlxSprite(0, 0);
+		backgroundFooter.makeGraphic(800, 35, FlxColor.fromRGB(44, 62, 80));
+		fieldFooter.add(backgroundFooter);
+		
+		var foregroundFooter:FlxSprite = new FlxSprite(5, 4);
+		foregroundFooter.makeGraphic(790, 22, FlxColor.fromRGB(119, 140, 163));
+		fieldFooter.add(foregroundFooter);
+		
+		var uiText:FlxText = new FlxText(10, 1, 0, 'Lang ');
+		uiText.setFormat(AssetPaths.Roboto_Bold__ttf, 22, FlxColor.WHITE, LEFT);
+		fieldFooter.add(uiText);
+		
+		var lineH:FlxSprite = new FlxSprite(uiText.x + uiText.width + 3, 4);
+		lineH.makeGraphic(2, 22, FlxColor.fromRGB(44, 62, 80));
+		fieldFooter.add(lineH);
+		
+		var uiText:FlxText = new FlxText(uiText.x + uiText.width + 3, 1, 39, 'FR');
+		uiText.setFormat(AssetPaths.Roboto_Bold__ttf, 22, FlxColor.WHITE, CENTER);
+		if (lang == "EN") uiText.color = FlxColor.fromRGB(189, 195, 199);
+		fieldFooter.add(uiText);
+		uiText.ID = 1;
+		FlxMouseEventManager.add(uiText, changeLang, null, null, null, false, true, false);
+		
+		var lineH:FlxSprite = new FlxSprite(uiText.x + uiText.width + 3, 4);
+		lineH.makeGraphic(2, 22, FlxColor.fromRGB(44, 62, 80));
+		fieldFooter.add(lineH);
+		
+		var uiText:FlxText = new FlxText(uiText.x + uiText.width + 3, 1, 39, 'EN');
+		uiText.setFormat(AssetPaths.Roboto_Bold__ttf, 22, FlxColor.WHITE, CENTER);
+		if (lang == "FR") uiText.color = FlxColor.fromRGB(189, 195, 199);
+		fieldFooter.add(uiText);
+		uiText.ID = 2;
+		FlxMouseEventManager.add(uiText, changeLang, null, null, null, false, true, false);
+		
+		var lineH:FlxSprite = new FlxSprite(uiText.x + uiText.width + 3, 4);
+		lineH.makeGraphic(2, 22, FlxColor.fromRGB(44, 62, 80));
+		fieldFooter.add(lineH);
+		
+		var uiText:FlxText = new FlxText(5, 2, 784, 'Premier Jeu de IndieBaie');
+		if (lang == "EN") uiText.text = "First Game of IndieBaie";
+		uiText.setFormat(AssetPaths.TitanOne_Regular__ttf, 22, FlxColor.fromRGB(25, 42, 86), RIGHT);
+		fieldFooter.add(uiText);
+	}
+	
+	public function upgradeHappy(_):Void
+	{
+		//if (bonheur < 10 && tenders >= Math.round((bonheur + 1) / 2))
+		//{
+			//tenders -= Math.round((bonheur + 1) / 2);
+			//bonheur++;
+		//}
+		//else if (tenders >= bonheur + 1)
+		//{
+			//tenders -= bonheur + 1;
+			//bonheur++;
+		//}
+		//drawFieldInfo();
+		//drawFieldGrade();
+	}
+	
+	public function upgradeRank(_):Void
+	{
+		//conditionRank.push([10, 25, 0]);
+		//if (rank != 6 && bonheur >= conditionRank[rank][0] && tenders >= conditionRank[rank][1] && money >= conditionRank[rank][2]) 
+		//{
+			//tenders -= conditionRank[rank][1];
+			//money -= conditionRank[rank][2];
+			//rank++;
+			//drawFieldGrade();
+			//drawFieldInfo();
+			//drawFieldMenu();
+			//
+			//if (rank == 1)
+			//{
+				//listRecrutement.push(generatePlayer());
+				//var delayRecrutement:Int = 10000;
+				//var timerRecrutement:Timer = new Timer(delayRecrutement);
+				//timerRecrutement.run = function ()
+				//{
+					//if (listRecrutement.length != 4) listRecrutement.push(generatePlayer());
+					//if (menuOption == "Recrutement" && cadreBoy == null) drawFieldRecrutementOption();
+				//}
+				//memberMax = 2;
+				//playScene(1);
+			//}
+			//
+			//if (rank == 2)
+			//{
+				//memberMax = 4;
+				//playScene(2);
+				//listContrat.push(generateContract());
+			//}
+			//if (rank == 3)
+			//{
+				//memberMax = 6;
+				//playScene(3);
+			//}
+		//}
+	}
+	
+	public function changeContent(obj:FlxSprite):Void
+	{
+		//if (menuOption != "Overlay")
+		//{
+			//if (obj.ID != 1) remove(fieldMissionOption);
+			//if (obj.ID != 2) remove(fieldContratOption);
+			//if (obj.ID != 3) remove(fieldRecrutementOption);
+			//if (obj.ID != 5) remove(fieldMdvOption);
+			//
+			//if (obj.ID == 1) menuOption = "Mission";
+			//else if (obj.ID == 2 && rank >= 2) menuOption = "Contrat";
+			//else if (obj.ID == 3 && rank >= 1) menuOption = "Recrutement";
+			//else if (obj.ID == 4 && rank >= 3) menuOption = "Fabrique";
+			//else if (obj.ID == 5 && rank >= 1) menuOption = "Mode de Vie";
+			//
+			//if (menuOption == "Mission") 
+			//{
+				//drawFieldMissionOption();
+				//add(fieldMissionOption);
+			//}
+			//else if (menuOption == "Contrat") 
+			//{
+				//drawFieldContratOption();
+				//add(fieldContratOption);
+			//}
+			//else if (menuOption == "Recrutement") 
+			//{
+				//drawFieldRecrutementOption();
+				//add(fieldRecrutementOption);
+			//}
+			//else if (menuOption == "Fabrique") 
+			//{
+				////drawFieldContratOption();
+				////add(fieldContratOption);
+			//}
+			//else if (menuOption == "Mode de Vie")
+			//{
+				//drawFieldMdvOption();
+				//add(fieldMdvOption);
+			//}
+			//drawFieldMenu();
+		//}
+	}
+	
+	public function changeLang(obj:FlxSprite):Void
+	{
+		if (obj.ID == 1) 
+		{
+			if (lang == "EN")
+			{
+				lang = "FR";
+				//grade = gradeFR;
+				//listAchats = listAchatsFR;
+				//drawFieldGrade();
+				//drawFieldInfo();
+				//drawFieldMission();
+				drawFieldMenu();
+				drawFieldFooter();
+				
+				//if (menuOption == "Mission") drawFieldMissionOption();
+				//else if (menuOption == "Contrat") drawFieldContratOption();
+				//else if (menuOption == "Recrutement") drawFieldRecrutementOption();
+				//else if (menuOption == "Mode de Vie") drawFieldMdvOption();	
+				//else if (menuOption == "Overlay") playScene(currentScene);
+			}
+		}
+		else if (obj.ID == 2)
+		{
+			if (lang == "FR")
+			{
+				lang = "EN";
+				//grade = gradeEN;
+				//listAchats = listAchatsEN;
+				//drawFieldGrade();
+				//drawFieldInfo();
+				//drawFieldMission();
+				//drawFieldFooter();
+				drawFieldMenu();
+				drawFieldFooter();
+				
+				//if (menuOption == "Mission") drawFieldMissionOption();
+				//else if (menuOption == "Contrat") drawFieldContratOption();
+				//else if (menuOption == "Recrutement") drawFieldRecrutementOption();
+				//else if (menuOption == "Mode de Vie") drawFieldMdvOption();	
+				//else if (menuOption == "Overlay") playScene(currentScene);
+			}
+		}
+	}
+	
+	public function hoverBtnTop(obj:FlxSprite):Void
+	{
+		if (obj.animation.frameIndex == 0) obj.animation.frameIndex = 1;
+		else if (obj.animation.frameIndex == 2) obj.animation.frameIndex = 3;
+	}
+	
+	public function outBtnTop(obj:FlxSprite):Void
+	{
+		if (obj.animation.frameIndex == 1) obj.animation.frameIndex = 0;
+		else if (obj.animation.frameIndex == 3) obj.animation.frameIndex = 2;
+	}
+}

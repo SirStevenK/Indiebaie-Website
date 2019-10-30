@@ -1,0 +1,22 @@
+Employé
+Cadre              ( 10 bonheur + 25 tenders)  MdV - Recrutement
+Chef d'équipe      ( 35 bonheur +    20 000$)  Contrat
+Conseiller         ( 55 bonheur +   100 000$)  Fabrique
+Bras-Droit         ( 75 bonheur +   500 000$)  Fabrique Sauce
+Patron             (100 bonheur + 1 000 000$)  Gain 100%
+
+Missions : Livrer/Récupérer du poulet (cherche reviens avec), Surveiller un stock de poulet, Accompagner un membre 
+Contrat  : Livrer/Récupérer des cargaison de tenders/sauces
+Usines   : Usines à tenders/sauces (niveau)
+
+Mode De Vie : Lecteur de Musique / Console de jeu / Velo / Smartphone / Ordinateur / TV / Montre de Luxe / Appartement / Voiture de luxe / Tableau d'un grand peintre / Maison / Jet Privé / Manoir / Yacht
+
+Evenement : Chopper par les flics / Chopper par un gang adverse / Trahison (Demander à ses membres de le retrouver)
+
+Attribut : Vitesse / Efficacité / Loyauté
+
+Footer (Lang Sound  First Game Of IndieBaie)
+
+Bonheur MdV +++ 15
+
+Vous n'avez plus d'emplacement disponible

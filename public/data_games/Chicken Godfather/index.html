@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	
+	<meta charset="utf-8">
+	
+	<title>Godfather Chicken</title>
+	
+	<meta id="viewport" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	
+	
+	<link rel="shortcut icon" type="image/png" href="./favicon.png">
+	
+	
+	<script type="text/javascript" src="https://cdn1.kongregate.com/javascripts/kongregate_api.js"></script>
+	<script type="text/javascript" src="./lib/howler.min.js"></script>
+	<script type="text/javascript" src="./lib/pako.min.js"></script>
+	<script type="text/javascript" src="./lib/FileSaver.min.js"></script>
+	<script type="text/javascript" src="./GodfatherChicken.js"></script>
+	
+	<script>
+		window.addEventListener ("touchmove", function (event) { event.preventDefault (); }, false);
+		if (typeof window.devicePixelRatio != 'undefined' && window.devicePixelRatio > 2) {
+			var meta = document.getElementById ("viewport");
+			meta.setAttribute ('content', 'width=device-width, initial-scale=' + (2 / window.devicePixelRatio) + ', user-scalable=no');
+		}
+	</script>
+	
+	<style>
+		html,body { margin: 0; padding: 0; height: 100%; overflow: hidden; }
+		#openfl-content { background: #000000; width: 800px; height: 600px; }
+		@font-face {
+			font-family: 'Black Han Sans Regular';
+			src: url('assets/data/BlackHanSans-Regular.eot?#iefix') format('embedded-opentype'),
+			url('assets/data/BlackHanSans-Regular.woff') format('woff'),
+			url('assets/data/BlackHanSans-Regular.ttf') format('truetype'),
+			url('assets/data/BlackHanSans-Regular.svg#Black%20Han%20Sans%20Regular') format('svg');
+			font-weight: normal;
+			font-style: normal;
+		}
+		@font-face {
+			font-family: 'Roboto Bold';
+			src: url('assets/data/Roboto-Bold.eot?#iefix') format('embedded-opentype'),
+			url('assets/data/Roboto-Bold.woff') format('woff'),
+			url('assets/data/Roboto-Bold.ttf') format('truetype'),
+			url('assets/data/Roboto-Bold.svg#Roboto%20Bold') format('svg');
+			font-weight: normal;
+			font-style: normal;
+		}
+		@font-face {
+			font-family: 'Roboto';
+			src: url('assets/data/Roboto-Regular.eot?#iefix') format('embedded-opentype'),
+			url('assets/data/Roboto-Regular.woff') format('woff'),
+			url('assets/data/Roboto-Regular.ttf') format('truetype'),
+			url('assets/data/Roboto-Regular.svg#Roboto') format('svg');
+			font-weight: normal;
+			font-style: normal;
+		}
+		@font-face {
+			font-family: 'Titan One';
+			src: url('assets/data/TitanOne-Regular.eot?#iefix') format('embedded-opentype'),
+			url('assets/data/TitanOne-Regular.woff') format('woff'),
+			url('assets/data/TitanOne-Regular.ttf') format('truetype'),
+			url('assets/data/TitanOne-Regular.svg#Titan%20One') format('svg');
+			font-weight: normal;
+			font-style: normal;
+		}
+		@font-face {
+			font-family: 'Titillium Bold';
+			src: url('assets/data/Titillium-Bold.eot?#iefix') format('embedded-opentype'),
+			url('assets/data/Titillium-Bold.woff') format('woff'),
+			url('assets/data/Titillium-Bold.ttf') format('truetype'),
+			url('assets/data/Titillium-Bold.svg#Titillium%20Bold') format('svg');
+			font-weight: normal;
+			font-style: normal;
+		}
+		@font-face {
+			font-family: 'Nokia Cellphone FC Small';
+			src: url('flixel/fonts/nokiafc22.eot?#iefix') format('embedded-opentype'),
+			url('flixel/fonts/nokiafc22.woff') format('woff'),
+			url('flixel/fonts/nokiafc22.ttf') format('truetype'),
+			url('flixel/fonts/nokiafc22.svg#Nokia%20Cellphone%20FC%20Small') format('svg');
+			font-weight: normal;
+			font-style: normal;
+		}
+		@font-face {
+			font-family: 'Monsterrat';
+			src: url('flixel/fonts/monsterrat.eot?#iefix') format('embedded-opentype'),
+			url('flixel/fonts/monsterrat.woff') format('woff'),
+			url('flixel/fonts/monsterrat.ttf') format('truetype'),
+			url('flixel/fonts/monsterrat.svg#Monsterrat') format('svg');
+			font-weight: normal;
+			font-style: normal;
+		}
+
+	</style>
+	
+</head>
+<body>
+	
+	<noscript>This webpage makes extensive use of JavaScript. Please enable JavaScript in your web browser to view this page.</noscript>
+	
+	<div id="openfl-content"></div>
+	
+	<script type="text/javascript">
+		lime.embed ("GodfatherChicken", "openfl-content", 800, 600, { parameters: {} });
+	</script>
+	
+</body>
+</html>

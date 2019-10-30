@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="theme-color" content="#3d3d3d">
+        <title>Site Indiebaie</title>
+        <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link href="https://fonts.googleapis.com/css?family=Leckerli+One|Roboto+Condensed|Lato&display=swap" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" media="screen" href="/stylesheets/styles.css">
+    </head>
+    <body>
+        <header>
+            <img src="/images/IndieBaieTop.png">
+        </header>
+        <section id="fil">
+            <h2 class="fil-group-title">Jeux Principaux</h2>
+            <div class="fil-group">
+                <% for ( let i = 0; i < games.length; i++) { %>
+                    <a href="/games/<%= games[i].nom.replace(/ /gi,'-') %>">
+                        <div class="fil-card">
+                            <img src="<%= games[i].mainImage %>">
+                            <h3 class="fil-card-title"><%= games[i].nom %></h3>
+                        </div>
+                    </a>
+                <% } %>
+
+            </div>
+            <footer>
+                <p>Site de IndieBaie - <a class="link" href="https://www.kongregate.com/accounts/IndieBaie">Kongregate</a> - Handmade ❤️</p>
+            </footer>
+        </section>
+    </body>
+</html>
+
